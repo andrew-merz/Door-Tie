@@ -1,19 +1,20 @@
-require("dotenv").config();
+const express = require("express");
+const controllers = require("./controllers");
+const app = express();
+
+require("../config/db.connection");
 
 const { PORT = 4000, MONGODB_URL } = process.env;
 
-const express = require("express");
+// import middlware
+const cors = require("cors");
+const morgan = require("morgan");
 
-const app = express();
-
-const mongoose = require("mongoose");
-
-mongoose.connect(MONGODB_URL);
-
-mongoose.connection
-  .on("open", () => console.log("You are connected to mongoose"))
-  .on("close", () => console.log("You are disconnected from mongoose"))
-  .on("error", (error) => console.log(error));
+MiddleWare;
+////////////////////////////////
+app.use(cors()); // to prevent cors errors, open access to all origins
+app.use(morgan("dev")); // logging
+app.use(express.json()); // parse json bodies
 
 app.get("/", (req, res) => {
   res.send("hello world");

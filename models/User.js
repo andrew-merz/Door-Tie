@@ -24,10 +24,6 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     ref: "Status",
   },
-  roommates: {
-    type: String,
-    required: [true, "Add Roommates"],
-  },
 });
 
 const User = mongoose.model("User", userSchema);
