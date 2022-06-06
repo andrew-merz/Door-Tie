@@ -5,10 +5,10 @@ const roomSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  roomates: {
-    type: mongoose.types.ObjectId,
-    ref: "User",
-  },
+  //   roomates: {
+  //     type: mongoose.types.ObjectId,
+  //     ref: "User",
+  //   },
 });
 
 const Room = mongoose.model("Room", roomSchema);

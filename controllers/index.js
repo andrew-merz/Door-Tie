@@ -1,3 +1,6 @@
 require("../config/db.connection");
 
-module.exports = {};
+module.exports = {
+  auth: require("./auth_controller"),
+  room: require("./room_controller"),
+};
