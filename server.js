@@ -19,6 +19,8 @@ app.use(morgan("dev")); // logging
 app.use(express.json()); // parse json bodies
 
 app.use("/room", controllers.room);
+app.use("/auth", controllers.auth);
+app.use("/user", controllers.user);
 
 app.get("/", (req, res) => {
   res.send("hello world");

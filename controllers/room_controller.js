@@ -5,7 +5,7 @@ const db = require("../models");
 //index route
 router.get("/", async (req, res) => {
   try {
-    res.json(await Room.find({}));
+    res.json(await db.find({}));
   } catch (error) {
     //send error
     res.status(400).json(error);
@@ -15,10 +15,8 @@ router.get("/", async (req, res) => {
 //Create Route
 router.get("/room", async (req, res) => {
   try {
-    // get all people
-    res.json(await Room.find({}));
+    res.json(await db.create(req.body));
   } catch (error) {
-    //send error
     res.status(400).json(error);
   }
 });
@@ -27,7 +25,7 @@ router.get("/room", async (req, res) => {
 router.put("/room/:id", async (req, res) => {
   try {
     // update people by ID
-    res.json(await Room.findByIdAndUpdate(req.params.id, req.body));
+    res.json(await db.findByIdAndUpdate(req.params.id, req.body));
   } catch (error) {
     //send error
     res.status(400).json(error);
@@ -37,7 +35,7 @@ router.put("/room/:id", async (req, res) => {
 router.delete("/room/:id", async (req, res) => {
   try {
     // delete people by ID
-    res.json(await Room.findByIdAndRemove(req.params.id));
+    res.json(await db.findByIdAndRemove(req.params.id));
   } catch (error) {
     //send error
     res.status(400).json(error);
