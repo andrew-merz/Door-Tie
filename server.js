@@ -3,6 +3,8 @@ const methodOverride = require("method-override");
 const controllers = require("./controllers");
 const app = express();
 const navLinks = require("./navLinks");
+//just impporting user model unitl I move the routes
+const User = require("./models/User");
 require("./config/db.connection");
 
 const { PORT = 4000, MONGODB_URL } = process.env;
@@ -24,6 +26,34 @@ app.use("/user", controllers.user);
 
 app.get("/", (req, res) => {
   res.send("hello world");
+});
+
+//youtube tutorial - Register Route
+app.post("/api/register", async (req, res) => {
+  console.log(req.body);
+  try {
+    const user = await User.create({
+      username: req.body.username,
+      email: req.body.email,
+      password: req.body.password,
+    });
+    res.json({ status: "ok" });
+  } catch (err) {
+    res.json({ status: "error", error: "Duplicate username or email" });
+  }
+});
+
+//youtube tutorial - Login Route
+app.post("/api/Login", async (req, res) => {
+  const user = await User.findOne({
+    email: req.body.email,
+    password: req.body.password,
+  });
+  if (user) {
+    return res.json({ status: "ok", user: true });
+  } else {
+    return res.json({ status: "error", user: false });
+  }
 });
 
 app.listen(PORT, () => console.log(`listening on PORT ${PORT}`));
