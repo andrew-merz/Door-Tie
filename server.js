@@ -5,6 +5,7 @@ const app = express();
 const jwt = require("jsonwebtoken");
 //just impporting user model unitl I move the routes
 const User = require("./models/User");
+const bcrypt = require("bcryptjs");
 
 require("./config/db.connection");
 
@@ -33,10 +34,11 @@ app.get("/", (req, res) => {
 app.post("/api/register", async (req, res) => {
   console.log(req.body);
   try {
-    const user = await User.create({
+    const newPassword = await bcrypt.hash(req.body.password, 10);
+    await User.create({
       username: req.body.username,
       email: req.body.email,
-      password: req.body.password,
+      password: newPassword,
     });
     res.json({ status: "ok" });
   } catch (err) {
@@ -49,9 +51,12 @@ app.post("/api/register", async (req, res) => {
 app.post("/api/Login", async (req, res) => {
   const user = await User.findOne({
     email: req.body.email,
-    password: req.body.password,
   });
-  if (user) {
+  const isPasswordValid = await bcrypt.compare(
+    req.body.password,
+    user.password
+  );
+  if (isPasswordValid) {
     const token = jwt.sign(
       {
         username: user.username,
