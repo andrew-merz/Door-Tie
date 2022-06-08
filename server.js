@@ -2,9 +2,10 @@ const express = require("express");
 const methodOverride = require("method-override");
 const controllers = require("./controllers");
 const app = express();
-const navLinks = require("./navLinks");
+const jwt = require("jsonwebtoken");
 //just impporting user model unitl I move the routes
 const User = require("./models/User");
+
 require("./config/db.connection");
 
 const { PORT = 4000, MONGODB_URL } = process.env;
@@ -44,13 +45,22 @@ app.post("/api/register", async (req, res) => {
 });
 
 //youtube tutorial - Login Route
+//make secret more secure
 app.post("/api/Login", async (req, res) => {
   const user = await User.findOne({
     email: req.body.email,
     password: req.body.password,
   });
   if (user) {
-    return res.json({ status: "ok", user: true });
+    const token = jwt.sign(
+      {
+        username: user.username,
+        email: user.email,
+      },
+      "secret123"
+    );
+
+    return res.json({ status: "ok", user: token });
   } else {
     return res.json({ status: "error", user: false });
   }
