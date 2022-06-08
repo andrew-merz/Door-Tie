@@ -66,4 +66,35 @@ app.post("/api/Login", async (req, res) => {
   }
 });
 
+app.get("/api/Status", async (req, res) => {
+  const token = req.headers["x-acess-token"];
+
+  try {
+    const decoded = jwt.verify(token, "secret123");
+    const email = decoded.email;
+    const user = await User.findOne({ email: email });
+    return res.json({ status: "ok", status: user.status });
+  } catch (error) {
+    console.log(error);
+    res.json({ status: "error", error: "invalid token" });
+  }
+});
+
+app.post("/api/Status", async (req, res) => {
+  const token = req.headers["x-acess-token"];
+
+  try {
+    const decoded = jwt.verify(token, "secret123");
+    const email = decoded.email;
+    const user = await User.updateOne(
+      { email: email },
+      { $set: { status: req.body.status } }
+    );
+    return res.json({ status: "ok" });
+  } catch (error) {
+    console.log(error);
+    res.json({ status: "error", error: "invalid token" });
+  }
+});
+
 app.listen(PORT, () => console.log(`listening on PORT ${PORT}`));
