@@ -48,10 +48,13 @@ app.post("/api/register", async (req, res) => {
 
 //youtube tutorial - Login Route
 //make secret more secure
-app.post("/api/Login", async (req, res) => {
+app.post("/api/login", async (req, res) => {
   const user = await User.findOne({
     email: req.body.email,
   });
+  if (!user) {
+    return { status: "error", error: "Invalid Login" };
+  }
   const isPasswordValid = await bcrypt.compare(
     req.body.password,
     user.password
@@ -71,7 +74,7 @@ app.post("/api/Login", async (req, res) => {
   }
 });
 
-app.get("/api/Status", async (req, res) => {
+app.get("/api/status", async (req, res) => {
   const token = req.headers["x-acess-token"];
 
   try {
@@ -85,13 +88,13 @@ app.get("/api/Status", async (req, res) => {
   }
 });
 
-app.post("/api/Status", async (req, res) => {
+app.post("/api/status", async (req, res) => {
   const token = req.headers["x-acess-token"];
 
   try {
     const decoded = jwt.verify(token, "secret123");
     const email = decoded.email;
-    const user = await User.updateOne(
+    await User.updateOne(
       { email: email },
       { $set: { status: req.body.status } }
     );
