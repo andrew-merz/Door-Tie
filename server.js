@@ -81,7 +81,7 @@ app.get("/api/status", async (req, res) => {
     const decoded = jwt.verify(token, "secret123");
     const email = decoded.email;
     const user = await User.findOne({ email: email });
-    return res.json({ status: "ok", status: user.status });
+    return res.json({ status: "ok", location: user.location });
   } catch (error) {
     console.log(error);
     res.json({ status: "error", error: "invalid token" });
@@ -96,7 +96,7 @@ app.post("/api/status", async (req, res) => {
     const email = decoded.email;
     await User.updateOne(
       { email: email },
-      { $set: { status: req.body.status } }
+      { $set: { location: req.body.location } }
     );
     return res.json({ status: "ok" });
   } catch (error) {
