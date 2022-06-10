@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 //just impporting user model unitl I move the routes
 const User = require("./models/User");
 const bcrypt = require("bcryptjs");
-
+const Room = require("./models/Room");
 require("./config/db.connection");
 
 const { PORT = 4000, MONGODB_URL } = process.env;
@@ -108,6 +108,19 @@ app.post("/api/status", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.json({ status: "error", error: "invalid token" });
+  }
+});
+
+app.post("/api/room", async (req, res) => {
+  const token = req.headers["x-access-token"];
+  try {
+    //const decoded = jwt.verify(token, "secret123");
+    await Room.create({
+      name: req.body.name,
+    });
+    res.json({ status: "ok" });
+  } catch (err) {
+    res.json({ status: "error", error: "Room not available" });
   }
 });
 
