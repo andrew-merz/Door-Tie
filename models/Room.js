@@ -1,14 +1,13 @@
 const mongoose = require("mongoose");
 
 const roomSchema = new mongoose.Schema({
-  status: {
+  name: {
     type: String,
-    required: true,
   },
-  // name: {
-  //   type: String,
-  //   required: true,
-  // },
+  users: {
+    type: mongoose.Types.ObjectId,
+    ref: "User",
+  },
 });
 
 const Room = mongoose.model("Room", roomSchema);
