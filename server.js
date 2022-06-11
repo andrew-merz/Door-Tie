@@ -8,7 +8,7 @@ const User = require("./models/User");
 const bcrypt = require("bcryptjs");
 const Room = require("./models/Room");
 require("./config/db.connection");
-
+const db = require("./models");
 const { PORT = 4000, MONGODB_URL } = process.env;
 
 // import middlware
@@ -119,6 +119,14 @@ app.post("/api/room", async (req, res) => {
       name: req.body.name,
     });
     res.json({ status: "ok" });
+  } catch (err) {
+    res.json({ status: "error", error: "Room not available" });
+  }
+});
+
+app.get("/api/room", async (req, res) => {
+  try {
+    await db.User.find({}).populate("room");
   } catch (err) {
     res.json({ status: "error", error: "Room not available" });
   }
